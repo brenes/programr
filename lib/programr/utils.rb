@@ -17,6 +17,7 @@ module ProgramR
     # Returns an array of aiml files recursively found
     def self.find(files_and_dirs)
       files = []
+      files_and_dirs = [files_and_dirs].flatten
       files_and_dirs.each{|file|
         if File.file?(file) && (file  =~ /.*\.aiml$/)
           files << file
