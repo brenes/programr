@@ -24,10 +24,12 @@ class TestFacade < Test::Unit::TestCase
     assert_equal(ProgramR::Category.cardinality.to_s,
                  @robot.get_reaction('SIZE TEST'))
     assert_equal("TEST SPACE", @robot.get_reaction("SPACE TEST"))
+    assert_equal('infobot', @robot.get_reaction('get test 1'))
+    assert_equal('tiresiaset ok', @robot.get_reaction('set test 1'))
     assert_equal('tiresia', @robot.get_reaction('get test 1'))
-    assert_equal('TEST SPACE', @robot.get_reaction('justbeforethat tag test'))
-    assert_equal('TEST SPACE', @robot.get_reaction('that tag test'))
-    assert_equal('are you never tired to do the same things every day?', 
+    assert_equal('TIRESIASET OK', @robot.get_reaction('justbeforethat tag test'))
+    assert_equal('TIRESIASET OK', @robot.get_reaction('that tag test'))
+    assert_equal('are you never tired to do the same things every day?',
                  @robot.get_reaction('question test'))
     assert_equal('localhost', @robot.get_reaction('get test 2'))
     assert_equal('ok.', @robot.get_reaction('think test. i am male'))
