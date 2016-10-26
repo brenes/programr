@@ -8,7 +8,7 @@ class TestFacade < Test::Unit::TestCase
   end
 
   def test_aiml_file_finder
-    actual = ProgramR::AimlFinder::find(['test/data/mixed/single.aiml', 
+    actual = ProgramR::AimlFinder::find(['test/data/mixed/single.aiml',
                                         'test/data/mixed/dir']).sort
     expected = ['test/data/mixed/single.aiml',
                 'test/data/mixed/dir/in_dir.aiml',

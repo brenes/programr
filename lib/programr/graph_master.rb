@@ -12,7 +12,7 @@ class GraphMaster
   def merge(aCache)
     @graph.merge(aCache.graph)
   end
-  
+
   def learn(category)
     path = category.get_pattern
     path += [THAT] + category.get_that unless (category.get_that).empty?
@@ -48,7 +48,7 @@ class Node
       @children[key] = aCache.children[key]
     end
   end
-  
+
   def learn(category, path)
     branch = path.shift
     return @template = category.template unless branch
@@ -56,10 +56,11 @@ class Node
     @children[branch].learn(category, path)
   end
 
-  def get_template(pattern,starGreedy,isGreedy=false)  
+  def get_template(pattern,starGreedy,isGreedy=false)
     currentTemplate = nil
     gotValue        = nil
     curGreedy       = []
+
     if(@template)
       if(isGreedy)
 	starGreedy.push(pattern.shift) until(pattern.empty?||pattern[0]==THAT ||
@@ -85,14 +86,14 @@ class Node
       starGreedy.concat(curGreedy)
       return gotValue
     end
-    return currentTemplate if currentTemplate   
+    return currentTemplate if currentTemplate
     ["_","*"].each do |star|
       next unless(@children.key?(star))
       next unless(gotValue=@children[star].get_template(pattern.clone,
                                                         curGreedy,true))
 starGreedy.push(branch) if(branch == THAT || branch == TOPIC)
       starGreedy.concat(['<newMatch>',branch].concat(curGreedy))
-      return gotValue 
+      return gotValue
     end
     return nil
   end

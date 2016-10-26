@@ -6,12 +6,12 @@ class Category
   attr_accessor :template, :that, :topic
 
   @@cardinality = 0
-  def initialize 
-    @@cardinality += 1 
+  def initialize
+    @@cardinality += 1
     @pattern = []
     @that    = []
   end
-  
+
   def Category.cardinality; @@cardinality end
 
   def add_pattern(anObj)
@@ -29,7 +29,7 @@ class Category
     }
     return res.split(/\s+/)
   end
-  
+
   def get_that
     res = ''
     @that.each{|tocken|
@@ -57,12 +57,12 @@ end
 
 class Random
   @@environment = Environment.new
-  
+
   def initialize; @conditions = [] end
-  def setListElement(someAttributes) 
+  def setListElement(someAttributes)
     @conditions.push([])
   end
-  
+
   def add(aBody)
     @conditions[-1].push(aBody)
   end
@@ -81,13 +81,13 @@ end
 class Condition
   #se c'e' * nel value?
   @@environment = Environment.new
-  
+
   def initialize(someAttributes)
     @conditions = {}
     @property = someAttributes['name']
     @currentCondition = someAttributes['value'].sub('*','.*')
   end
-  
+
   def add(aBody)
     unless @conditions[@currentCondition]
       @conditions[@currentCondition] = []
@@ -99,10 +99,10 @@ class Condition
     @property = someAttributes['name'] if(someAttributes.key?('name'))
     @currentCondition = '_default'
     if(someAttributes.key?('value'))
-      @currentCondition = someAttributes['value'].sub('*','.*') 
+      @currentCondition = someAttributes['value'].sub('*','.*')
     end
   end
-  
+
   def execute
     return '' unless(@@environment.get(@property) =~ /^#{@currentCondition}$/)
     res = ''
@@ -113,7 +113,7 @@ class Condition
   end
   alias to_s execute
   def inspect()
-    "condition -> #{execute}" 
+    "condition -> #{execute}"
   end
 end
 
@@ -122,7 +122,7 @@ class ListCondition < Condition
     @conditions = {}
     @property = someAttributes['name'] if(someAttributes.key?('name'))
   end
-  
+
   def execute
     @conditions.keys.each do |key|
       if(@@environment.get(@property) == key)
@@ -140,7 +140,7 @@ end
 
 class SetTag
   @@environment = Environment.new
-  
+
   def initialize(aLocalname,attributes)
     if(attributes.empty?)
       @localname = aLocalname.sub(/^set_/,'')
@@ -149,11 +149,11 @@ class SetTag
     end
     @value = []
   end
-  
+
   def add(aBody)
     @value.push(aBody)
   end
-  
+
   def execute
     res = ''
     @value.each{|tocken|
@@ -167,12 +167,12 @@ end
 
 class Input
   @@environment = Environment.new
-  
+
   def initialize(someAttributes)
-    @index = 1 
+    @index = 1
     @index = someAttributes['index'].to_i if(someAttributes.key?('index'))
   end
-  
+
   def execute
     @@environment.getStimula(@index)
   end
@@ -188,13 +188,13 @@ class Star
     @index = 0
     @index = someAttributes['index'].to_i-1 unless(someAttributes.empty?)
   end
-  
+
   def execute
-    @@environment.send(@star,@index) 
+    @@environment.send(@star,@index)
   end
   alias to_s execute
-  def inspect() 
-    return "#{@star} #{@index} -> #{@@environment.send(@star,@index)}" 
+  def inspect()
+    return "#{@star} #{@index} -> #{@@environment.send(@star,@index)}"
   end
 end
 
@@ -209,14 +209,14 @@ class ReadOnlyTag
     end
     @attributed   = someAttributes
   end
-  
+
   def execute
     return @@environment.get(@localname) if(@attributed.empty?)
-    @@environment.get(@attributed['name']) 
+    @@environment.get(@attributed['name'])
   end
   alias to_s execute
-  def inspect() 
-    return "roTag #{@localname} -> #{execute}" 
+  def inspect()
+    return "roTag #{@localname} -> #{execute}"
   end
 end
 
@@ -241,11 +241,13 @@ class Sys_Date
 end
 
 class Srai
-def initialize(anObj=nil) 
-  @pattern = [] 
+def initialize(anObj=nil)
+  @pattern = []
   @pattern.push(anObj) if(anObj)
 end
-def add(anObj); @pattern.push(anObj) end
+def add(anObj)
+  @pattern.push(anObj)
+end
 def pattern
   res = ''
   @pattern.each{|tocken|
@@ -283,15 +285,15 @@ end
 
 class Person
   @@environment = Environment.new
-  @@swap = {'male' => {'me'     => 'him', 
-                       'my'     => 'his', 
-                       'myself' => 'himself', 
-                       'mine'   => 'his', 
-                       'i'      => 'he', 
-                       'he'     => 'i', 
+  @@swap = {'male' => {'me'     => 'him',
+                       'my'     => 'his',
+                       'myself' => 'himself',
+                       'mine'   => 'his',
+                       'i'      => 'he',
+                       'he'     => 'i',
                        'she'    => 'i'},
-            'female' => {'me'   => 'her', 
-                         'my'     => 'her', 
+            'female' => {'me'   => 'her',
+                         'my'     => 'her',
                          'myself' => 'herself',
 	                       'mine'   => 'hers',
                          'i'      => 'she',

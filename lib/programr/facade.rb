@@ -12,7 +12,7 @@ class Facade
   end
 
   def learn(files)
-    AimlFinder::find(files).each{|f| File.open(f,'r'){|f| @parser.parse f} }
+    AimlFinder::find(files).each{|f| File.open(f,'r'){|file| @parser.parse file} }
   end
 
   def loading(theCacheFilename='cache')
@@ -28,9 +28,9 @@ class Facade
   def dumping(theCacheFilename='cache')
     Cache::dumping(theCacheFilename,@graph_master)
   end
-  
+
   def get_reaction(stimula,firstStimula=true)
-    starGreedy = []  
+    starGreedy = []
 #TODO verify if case insensitive. Cross check with parser
     #@history.updateStimula(stimula.upcase) if(firstStimula)
 @history.updateStimula(stimula.upcase) if(firstStimula)
@@ -39,8 +39,9 @@ reaction = @graph_master.get_reaction(stimula.upcase, @history.that,
                                           @history.topic,starGreedy)
     @history.updateStarMatches(starGreedy)
     res = ''
-    reaction.each{|tocken| 
+    reaction.each{|tocken|
       if(tocken.class == Srai)
+
         tocken = get_reaction(tocken.pattern,false)
         @history.updateStarMatches(starGreedy)
       end
@@ -58,7 +59,7 @@ reaction = @graph_master.get_reaction(stimula.upcase, @history.that,
 
   def to_s
     @graph_master.to_s
-  end  
+  end
 
   #  def getBotName()end
 end

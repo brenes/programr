@@ -21,7 +21,7 @@ class AimlParser
     currentPerson2   = nil
     currentTopic     = nil
 
-    @parser.listen(%w{ category }){|uri,localname,qname,attributes| 
+    @parser.listen(%w{ category }){|uri,localname,qname,attributes|
       category = Category.new
       category.topic = currentTopic if(currentTopic)
     }
@@ -40,13 +40,13 @@ class AimlParser
       openLabels[-1].add(currentCondition)
       openLabels.push(currentCondition)
     }
-    
+
     @parser.listen(%w{ random }){|uri,localname,qname,attributes|
       currentCondition = Random.new
       openLabels[-1].add(currentCondition)
       openLabels.push(currentCondition)
     }
-    
+
     @parser.listen(:characters, %w{ condition }){|text|
       next if(text =~ /^\s+$/)
       currentCondition.add(text)
@@ -56,7 +56,7 @@ class AimlParser
       next unless currentCondition
       currentCondition.setListElement(attributes)
     }
-    
+
     @parser.listen(:characters,%w{ li }){|text|
       next unless currentCondition
       currentCondition.add(text)
@@ -64,7 +64,7 @@ class AimlParser
 
     @parser.listen(:end_element, ['condition','random']){
       currentCondition = nil
-      openLabels.pop      
+      openLabels.pop
     }
 ### end condition -- random
 
@@ -92,23 +92,23 @@ class AimlParser
 
 ### set
     @parser.listen([/^set_*/,'set']){|uri,localname,qname,attributes|
-      setObj = SetTag.new(localname,attributes)    
+      setObj = SetTag.new(localname,attributes)
       openLabels[-1].add(setObj)
       openLabels.push(setObj)
     }
 
     @parser.listen(:characters,[/^set_*/]){|text|
-      openLabels[-1].add(text)    
+      openLabels[-1].add(text)
     }
 
     @parser.listen(:end_element, [/^set_*/,'set']){
-      openLabels.pop      
+      openLabels.pop
     }
 ### end set
 
 ### pattern
     @parser.listen(%w{ pattern }){patternIsOpen = true}
-    @parser.listen(:characters,%w{ pattern }){|text| 
+    @parser.listen(:characters,%w{ pattern }){|text|
       #TODO verify if case insensitive. Cross check with facade
       category.add_pattern(text.upcase)
     }
@@ -122,8 +122,8 @@ class AimlParser
 ### end that
 
 ### template
-    @parser.listen(%w{ template }){ 
-      category.template = Template.new 
+    @parser.listen(%w{ template }){
+      category.template = Template.new
       openLabels.push(category.template)
     }
 
@@ -170,30 +170,30 @@ class AimlParser
     @parser.listen(%w{ date }){
       openLabels[-1].add(Sys_Date.new)
     }
-    
+
     @parser.listen(:characters, %w{ system }){|text|
       openLabels[-1].add(Command.new(text))
     }
-    
-    @parser.listen(%w{ size }){ 
+
+    @parser.listen(%w{ size }){
       openLabels[-1].add(Size.new)
     }
 
     @parser.listen(%w{ sr }){|uri,localname,qname,attributes|
       openLabels[-1].add(Srai.new(Star.new('star',{})))
     }
-### srai    
+### srai
     @parser.listen(%w{ srai }){|uri,localname,qname,attributes|
       currentSrai = Srai.new
       openLabels[-1].add(currentSrai)
       openLabels.push(currentSrai)
     }
-    
+
     @parser.listen(:characters, %w{ srai }){|text|
       currentSrai = Srai.new
       currentSrai.add(text)
     }
-    
+
     @parser.listen(:end_element, %w{ srai }){
       currentSrai = nil
       openLabels.pop
@@ -206,7 +206,7 @@ class AimlParser
       openLabels[-1].add(currentGender)
       openLabels.push(currentGender)
     }
-    
+
     @parser.listen(:characters, %w{ gender }){|text|
       currentGender.add(text)
     }
@@ -223,7 +223,7 @@ class AimlParser
       openLabels[-1].add(currentPerson)
       openLabels.push(currentPerson)
     }
-    
+
     @parser.listen(:characters, %w{ person }){|text|
       currentPerson.add(text)
     }
@@ -240,7 +240,7 @@ class AimlParser
       openLabels[-1].add(currentPerson2)
       openLabels.push(currentPerson2)
     }
-    
+
     @parser.listen(:characters, %w{ person2 }){|text|
       currentPerson2.add(text)
     }
@@ -257,7 +257,7 @@ class AimlParser
     @parser.listen(%w{ topic }){|uri,localname,qname,attributes|
       currentTopic = attributes['name']
     }
-    
+
     @parser.listen(:end_element, %w{ topic }){
       currentTopic = nil
     }
