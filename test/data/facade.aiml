@@ -139,7 +139,7 @@ Client: I admire robots like you.
 
  <category>
   <pattern>set test 1</pattern>
-  <template><set_bot_name>tiresia</set_bot_name>set ok</template>
+  <template><think><set_bot_name>tiresia</set_bot_name></think>set ok</template>
  </category>
 
  <category>
